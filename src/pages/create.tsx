@@ -1,50 +1,41 @@
 import * as React from 'react'
 import Head from 'next/head'
-// import { utils } from 'near-api-js'
 import { Box, Text, Button, CheckBox, Spinner } from 'grommet'
 
 import { TextInput } from 'src/components/TextInput'
 import { NearContext } from 'src/near/nearContext'
-// import { useGetNearQuoteQuery } from 'src/redux/api/nearQuote'
-import { useGetBalance } from 'src/hooks/useGetBalance'
-// import { useGetStats } from 'src/hooks/useGetStats'
-// import { toNumber } from 'src/utils/numbers'
-
-// import { SwapInput } from 'src/components/SwapInput'
 
 const Create: React.FC = () => {
   const { contract } = React.useContext(NearContext)
   const [tokenName, setTokenName] = React.useState<string>('')
   const [tokenSymbol, setTokenSymbol] = React.useState<string>('')
   const [tokenSupply, setTokenSupply] = React.useState<string>('')
-  const [tokenDecimals, setTokenDecimals] = React.useState<string>('')
+  const [tokenDecimals, setTokenDecimals] = React.useState<number>()
   const [canMint, setCanMint] = React.useState<boolean>(false)
   const [canBurn, setCanBurn] = React.useState<boolean>(false)
-  const [canChangeOwnwer, setCanChangeOwnwer] = React.useState<boolean>(false)
 
   const [isLoading, setIsLoading] = React.useState(false)
-  const { nearBalance } = useGetBalance()
-  // const { stats } = useGetStats()
 
   const isDisabled =
     !tokenName || !tokenSymbol || !tokenSupply || !tokenDecimals
 
-  // const { data: nearQuote } = useGetNearQuoteQuery(undefined, {
-  //   pollingInterval: 60000, // set to 60 seconds
-  // })
-
   const handleCreate = async () => {
-    setIsLoading(true)
-    await contract?.createToken({
-      tokenName,
-      symbol: tokenSymbol,
-      supply: tokenSupply,
-      decimals: tokenDecimals,
-      canBurn,
-      canMint,
-    })
-    console.log({ tokenName, tokenSymbol, tokenSupply, tokenDecimals })
-    setIsLoading(false)
+    try {
+      setIsLoading(true)
+      await contract?.deploy()
+      await contract?.createToken({
+        tokenName,
+        symbol: tokenSymbol,
+        supply: tokenSupply,
+        decimals: tokenDecimals || 18,
+        canBurn,
+        canMint,
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -119,7 +110,7 @@ const Create: React.FC = () => {
             size="large"
             textAlign="start"
             min={0}
-            onChange={(evt) => setTokenDecimals(evt.target.value)}
+            onChange={(evt) => setTokenDecimals(Number(evt.target.value))}
           />
           <Box
             direction="column"
@@ -149,16 +140,6 @@ const Create: React.FC = () => {
               />
               <Text size="small" textAlign="center">
                 Can Burn
-              </Text>
-            </Box>
-            <Box direction="row">
-              <CheckBox
-                pad="0 8px 0 0"
-                checked={canChangeOwnwer}
-                onChange={() => setCanChangeOwnwer(!canChangeOwnwer)}
-              />
-              <Text size="small" textAlign="center">
-                Can change owner
               </Text>
             </Box>
           </Box>

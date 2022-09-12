@@ -52,6 +52,7 @@ export const initContract = async (): Promise<NearContextType> => {
       viewMethods: ['getTokenStats'],
       // Change methods can modify the state, but you don't receive the returned value when called
       changeMethods: [
+        'deploy',
         'createToken',
         'burnToken',
         'mintToken',

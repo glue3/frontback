@@ -13,8 +13,8 @@ const Home: NextPage = () => {
     <>
       <MainContainer>
         <Head>
-          <title>Glu3</title>
-          <meta name="description" content="Web3 without effort" />
+          <title>GLU3</title>
+          <meta name="description" content="Web3 for the masses" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Box
@@ -32,7 +32,7 @@ const Home: NextPage = () => {
           <Box width="90%">
             <Image
               src="/images/two_worlds_transparent.png"
-              alt="Web2 and Web3 united by GLUE"
+              alt="Web2 and Web3 united by GLU3"
               width={2304}
               height={916}
               objectFit="scale-down"

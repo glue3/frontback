@@ -10,7 +10,7 @@ export interface CreateTokenPropsType {
   tokenName: string
   symbol: string
   supply: string
-  decimals: string
+  decimals: number
   canMint: boolean
   canBurn: boolean
 }
@@ -19,6 +19,7 @@ export interface ContractType extends nearAPI.Contract {
   /*
    * Change Methods
    */
+  deploy: (gas?: string, deposit?: string) => void
   createToken: (
     {
       tokenName,
