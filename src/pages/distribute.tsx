@@ -2,8 +2,31 @@ import * as React from 'react'
 import Head from 'next/head'
 import { Box, Text, Button, Select } from 'grommet'
 import { TextInput } from 'src/components/TextInput'
+import { NearContext } from 'src/near/nearContext'
 
 const Distribute: React.FC = () => {
+  const { contract } = React.useContext(NearContext)
+  const [amount, setAmount] = React.useState<string>('')
+  const [walletAddress, setWalletAddress] = React.useState<string>('')
+
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const isDisabled = !amount || !walletAddress
+
+  const handleTransfer = async () => {
+    try {
+      setIsLoading(true)
+      await contract?.sendToken({
+        amount,
+        walletAddress,
+      })
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -38,7 +61,6 @@ const Distribute: React.FC = () => {
         >
           <Box
             margin="5px auto 0 auto"
-            // border={{ size: 'xsmall' }}
             width="90%"
             flex
             direction="column"
@@ -49,12 +71,6 @@ const Distribute: React.FC = () => {
             <Select
               options={['Test Token - TST', 'Staging Token - STG']}
               placeholder="choose the token"
-              // width="100%"
-              // height="400px"
-              // margin="0"
-              // pad="xsmall"
-              // value={value}
-              // onChange={({ option }) => setValue(option)}
             />
           </Box>
           <TextInput
@@ -64,6 +80,7 @@ const Distribute: React.FC = () => {
             placeholder="destination wallet"
             size="large"
             textAlign="start"
+            onChange={(evt) => setWalletAddress(evt.target.value)}
           />
           <TextInput
             plain={true}
@@ -75,12 +92,13 @@ const Distribute: React.FC = () => {
             size="large"
             textAlign="start"
             min={0}
+            onChange={(evt) => setAmount(evt.target.value)}
           />
 
           <Button
             primary
-            // disabled={!depositAmnt || isDepositing}
-            // icon={isCreating ? <Spinner /> : undefined}
+            disabled={isDisabled || isLoading}
+            icon={isLoading ? <Spinner /> : undefined}
             label="Send"
             alignSelf="center"
             size="large"
@@ -89,7 +107,7 @@ const Distribute: React.FC = () => {
               margin: '0 auto',
               textAlign: 'center',
             }}
-            // onClick={handleDeposit}
+            onClick={handleTransfer}
           />
         </Box>
         <Box
