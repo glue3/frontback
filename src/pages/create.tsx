@@ -37,14 +37,18 @@ const Create: React.FC = () => {
     try {
       setIsLoading(true)
       const data = localStorage.getItem('tokenData') || ''
+      console.log({ data })
       // Todo: call the api-key gen method
       await contract?.createToken(
         { ...JSON.parse(data) },
         '300000000000000',
         '0'
       )
-      await axios.post('/api/apiKey', { wallet: currentUser?.accountId })
-      await localStorage.setItem('isCreating', JSON.stringify(false))
+      const res = await axios.post('/api/apiKey', {
+        wallet: currentUser?.accountId,
+      })
+      console.log({ res })
+      localStorage.setItem('isCreating', JSON.stringify(false))
     } catch (e) {
       console.error(e)
     } finally {
