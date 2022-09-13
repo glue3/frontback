@@ -80,7 +80,7 @@ const Create: React.FC = () => {
         JSON.stringify({
           tokenName,
           symbol: tokenSymbol,
-          supply: tokenSupply,
+          supply: utils.format.parseNearAmount(tokenSupply),
           decimals: tokenDecimals || 18,
           canBurn,
           canMint,
