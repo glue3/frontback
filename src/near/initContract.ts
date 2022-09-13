@@ -87,7 +87,6 @@ export const initContract = async (
         'sendToFund',
         'sendFromFund',
         'changeOwner',
-        'storage_deposit',
       ],
     }
   )

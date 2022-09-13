@@ -47,6 +47,15 @@ export interface ContractType extends nearAPI.Contract {
     gas?: string,
     deposit?: string
   ) => void
+  sendFromFund: (
+    {
+      id,
+      amount,
+      walletAddress,
+    }: { id: string; amount: string; walletAddress: string },
+    gas?: string,
+    deposit?: string
+  ) => void
 
   /*
    * View Methods
