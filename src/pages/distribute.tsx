@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Head from 'next/head'
-// import { utils } from 'near-api-js'
+import { utils } from 'near-api-js'
 import { Box, Text, Button, Spinner } from 'grommet'
 
 import { TextInput } from 'src/components/TextInput'
@@ -49,7 +49,7 @@ const Distribute: React.FC = () => {
       await contract?.ft_transfer(
         {
           receiver_id: walletAddress,
-          amount,
+          amount: utils.format.parseNearAmount(amount),
         },
         '300000000000000'
       )

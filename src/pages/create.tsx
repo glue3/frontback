@@ -13,7 +13,7 @@ const Create: React.FC = () => {
   const [tokenName, setTokenName] = React.useState<string>('')
   const [tokenSymbol, setTokenSymbol] = React.useState<string>('')
   const [tokenSupply, setTokenSupply] = React.useState<string>('')
-  const [tokenDecimals, setTokenDecimals] = React.useState<number | null>(null)
+  const [tokenDecimals, setTokenDecimals] = React.useState<number | null>(24)
   const [canMint, setCanMint] = React.useState<boolean>(false)
   const [canBurn, setCanBurn] = React.useState<boolean>(false)
   const [isCreating, setIsCreating] = React.useState<boolean>(false)
@@ -196,18 +196,18 @@ const Create: React.FC = () => {
                 min={0}
                 onChange={(evt) => setTokenSupply(evt.target.value)}
               />
-              <TextInput
-                plain={true}
-                focusIndicator={false}
-                name="tokenDecimals"
-                type="number"
-                step="1"
-                placeholder="18 (decimals)"
-                size="large"
-                textAlign="start"
-                min={0}
-                onChange={(evt) => setTokenDecimals(Number(evt.target.value))}
-              />
+              {/*<TextInput*/}
+              {/*  plain={true}*/}
+              {/*  focusIndicator={false}*/}
+              {/*  name="tokenDecimals"*/}
+              {/*  type="number"*/}
+              {/*  step="1"*/}
+              {/*  placeholder="18 (decimals)"*/}
+              {/*  size="large"*/}
+              {/*  textAlign="start"*/}
+              {/*  min={0}*/}
+              {/*  onChange={(evt) => setTokenDecimals(Number(evt.target.value))}*/}
+              {/*/>*/}
               <Box
                 direction="column"
                 justify="start"
