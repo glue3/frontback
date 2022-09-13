@@ -46,10 +46,6 @@ const Distribute: React.FC = () => {
   const handleTransfer = async () => {
     try {
       setIsLoading(true)
-      await contract?.storage_deposit(
-        { account_id: walletAddress },
-        '300000000000000'
-      )
       await contract?.ft_transfer(
         {
           receiver_id: walletAddress,
