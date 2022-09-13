@@ -37,18 +37,19 @@ const Create: React.FC = () => {
     try {
       setIsLoading(true)
       const data = localStorage.getItem('tokenData') || ''
-      console.log({ data })
+      // console.log({ data })
       // Todo: call the api-key gen method
       await contract?.createToken(
         { ...JSON.parse(data) },
         '300000000000000',
         '0'
       )
-      const res = await axios.post('/api/apiKey', {
+      await axios.post('api/apiKey', {
         wallet: currentUser?.accountId,
       })
-      console.log({ res })
+      // console.log({ res })
       localStorage.setItem('isCreating', JSON.stringify(false))
+      localStorage.setItem('tokenData', '')
     } catch (e) {
       console.error(e)
     } finally {
@@ -61,7 +62,6 @@ const Create: React.FC = () => {
   React.useEffect(() => {
     const storedIsCreating = localStorage.getItem('isCreating') || 'false'
     const parsedValue = JSON.parse(storedIsCreating)
-    console.log({ parsedValue })
     setIsCreating(parsedValue)
   }, [])
 
