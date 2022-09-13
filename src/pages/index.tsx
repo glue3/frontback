@@ -15,7 +15,7 @@ const Home: NextPage = () => {
         <Head>
           <title>GLU3</title>
           <meta name="description" content="Web3 for the masses" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/favicon.png" />
         </Head>
         <Box
           align="center"

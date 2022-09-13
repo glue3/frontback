@@ -1,29 +1,67 @@
 import * as React from 'react'
 import Head from 'next/head'
-import { Box, Text, Button, Select } from 'grommet'
+// import { utils } from 'near-api-js'
+import { Box, Text, Button, Spinner } from 'grommet'
+
 import { TextInput } from 'src/components/TextInput'
 import { NearContext } from 'src/near/nearContext'
+import axios from 'axios'
 
 const Distribute: React.FC = () => {
-  const { contract } = React.useContext(NearContext)
+  const { contract, currentUser } = React.useContext(NearContext)
   const [amount, setAmount] = React.useState<string>('')
   const [walletAddress, setWalletAddress] = React.useState<string>('')
-
   const [isLoading, setIsLoading] = React.useState(false)
+  const [apiKey, setApiKey] = React.useState<string>('')
 
-  const isDisabled = !amount || !walletAddress
-
-  const handleTransfer = async () => {
+  const getApiKey = async () => {
     try {
       setIsLoading(true)
-      await contract?.sendToken({
-        amount,
-        walletAddress,
+      const res = await axios.get('api/apiKey', {
+        params: { wallet: currentUser?.accountId },
       })
+      const { apiKey: newApiKey } = res.data
+      if (newApiKey) {
+        setApiKey(newApiKey)
+      }
     } catch (e) {
       console.error(e)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  // on Mount
+  React.useEffect(() => {
+    getApiKey()
+  }, [])
+
+  const isDisabled = !amount || !walletAddress
+
+  const cleanForm = () => {
+    setAmount('')
+    setWalletAddress('')
+  }
+
+  const handleTransfer = async () => {
+    try {
+      setIsLoading(true)
+      await contract?.storage_deposit(
+        { account_id: walletAddress },
+        '300000000000000'
+      )
+      await contract?.ft_transfer(
+        {
+          receiver_id: walletAddress,
+          amount,
+        },
+        '300000000000000'
+      )
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+      cleanForm()
     }
   }
 
@@ -32,7 +70,7 @@ const Distribute: React.FC = () => {
       <Head>
         <title>GLU3 - Distribute a token</title>
         <meta name="description" content="Distribute your tokens with GLU3" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Box
         alignContent="center"
@@ -59,68 +97,95 @@ const Distribute: React.FC = () => {
           round="small"
           margin="0 auto"
         >
+          {apiKey ? (
+            <>
+              {/*<Box*/}
+              {/*  margin="5px auto 0 auto"*/}
+              {/*  width="90%"*/}
+              {/*  flex*/}
+              {/*  direction="column"*/}
+              {/*  round="small"*/}
+              {/*  pad="0"*/}
+              {/*  background="background-back"*/}
+              {/*>*/}
+              {/*  <Select*/}
+              {/*    options={['Test Token - TST', 'Staging Token - STG']}*/}
+              {/*    placeholder="choose the token"*/}
+              {/*  />*/}
+              {/*</Box>*/}
+              <TextInput
+                plain={true}
+                focusIndicator={false}
+                name="walletAddress"
+                placeholder="destination wallet"
+                size="large"
+                textAlign="start"
+                value={walletAddress}
+                onChange={(evt) => setWalletAddress(evt.target.value)}
+              />
+              <TextInput
+                plain={true}
+                focusIndicator={false}
+                name="amount"
+                type="number"
+                step="0.1"
+                placeholder="1000000 (amount)"
+                size="large"
+                textAlign="start"
+                min={0}
+                value={amount}
+                onChange={(evt) => setAmount(evt.target.value)}
+              />
+              <Button
+                primary
+                disabled={isDisabled || isLoading}
+                icon={isLoading ? <Spinner /> : undefined}
+                label="Send"
+                alignSelf="center"
+                size="large"
+                margin="20px auto 0 auto"
+                style={{
+                  width: '90%',
+                  textAlign: 'center',
+                }}
+                onClick={handleTransfer}
+              />
+            </>
+          ) : (
+            <Box
+              height="400px"
+              direction="column"
+              justify="center"
+              align="center"
+            >
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <Text>
+                  Please, head to the create token section <br />
+                  in order to create your first token.
+                </Text>
+              )}
+            </Box>
+          )}
+        </Box>
+        {apiKey ? (
           <Box
-            margin="5px auto 0 auto"
-            width="90%"
-            flex
-            direction="column"
+            width={{ max: '500px', width: '90%' }}
+            background="background-front"
+            gap="small"
+            pad="medium"
             round="small"
-            pad="0"
-            background="background-back"
+            margin="40px auto 0 auto"
+            justify="center"
+            align="center"
           >
-            <Select
-              options={['Test Token - TST', 'Staging Token - STG']}
-              placeholder="choose the token"
-            />
+            <Text size="large">YOUR API KEY:</Text>
+            <Text weight="bold" size="small">
+              {apiKey}
+            </Text>
           </Box>
-          <TextInput
-            plain={true}
-            focusIndicator={false}
-            name="tokenSymbol"
-            placeholder="destination wallet"
-            size="large"
-            textAlign="start"
-            onChange={(evt) => setWalletAddress(evt.target.value)}
-          />
-          <TextInput
-            plain={true}
-            focusIndicator={false}
-            name="tokenName"
-            type="number"
-            step="0.1"
-            placeholder="1000000 (amount)"
-            size="large"
-            textAlign="start"
-            min={0}
-            onChange={(evt) => setAmount(evt.target.value)}
-          />
-
-          <Button
-            primary
-            disabled={isDisabled || isLoading}
-            icon={isLoading ? <Spinner /> : undefined}
-            label="Send"
-            alignSelf="center"
-            size="large"
-            style={{
-              width: '90%',
-              margin: '0 auto',
-              textAlign: 'center',
-            }}
-            onClick={handleTransfer}
-          />
-        </Box>
-        <Box
-          width={{ max: '500px', width: '90%' }}
-          background="background-front"
-          gap="small"
-          pad="medium"
-          round="small"
-          margin="40px auto 0 auto"
-        >
-          <Text size="small">YOUR API KEY:</Text>
-          <Text weight="bold">ewfn23-23423nkj-234234-sdfdsf</Text>
-        </Box>
+        ) : null}
       </Box>
     </>
   )

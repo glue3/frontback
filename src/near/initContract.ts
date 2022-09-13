@@ -56,10 +56,11 @@ export const initContract = async (): Promise<NearContextType> => {
         'createToken',
         'burnToken',
         'mintToken',
-        'sendToken',
+        'ft_transfer',
         'sendToFund',
         'sendFromFund',
         'changeOwner',
+        'storage_deposit',
       ],
     }
   )

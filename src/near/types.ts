@@ -19,7 +19,7 @@ export interface ContractType extends nearAPI.Contract {
   /*
    * Change Methods
    */
-  deploy: (gas?: string, deposit?: string) => void
+  deploy: ({}, gas: string | null, deposit?: string | null) => void
   createToken: (
     {
       tokenName,
@@ -32,8 +32,13 @@ export interface ContractType extends nearAPI.Contract {
     gas?: string,
     deposit?: string
   ) => void
-  sendToken: (
-    { amount, walletAddress }: { amount: string; walletAddress: string },
+  ft_transfer: (
+    { receiver_id, amount }: { amount: string | null; receiver_id: string },
+    gas?: string,
+    deposit?: string
+  ) => void
+  storage_deposit: (
+    { account_id }: { account_id: string },
     gas?: string,
     deposit?: string
   ) => void

@@ -77,3 +77,8 @@ changeOwner(address)
 
 - `POST /claim` (claim tokens from fund with an id and a wallet Address)
 
+
+## WARNING!
+
+This project was coded in only 2 days for the Nearcon 2022 Hackathon. Therefore, it is just a proof of concept.
+The API routes are not secured whatsoever. So, please, don't use this code in production.
