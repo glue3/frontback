@@ -60,14 +60,16 @@ const Create: React.FC = () => {
   // on mount verify if local storage saved an ongoing token creation
   React.useEffect(() => {
     const storedIsCreating = localStorage.getItem('isCreating') || 'false'
-    setIsCreating(JSON.parse(storedIsCreating))
+    const parsedValue = JSON.parse(storedIsCreating)
+    console.log({ parsedValue })
+    setIsCreating(parsedValue)
   }, [])
 
   React.useEffect(() => {
     if (isCreating) {
       createToken()
     }
-  }, [])
+  }, [isCreating])
 
   const handleCreate = async () => {
     try {
