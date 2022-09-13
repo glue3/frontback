@@ -20,33 +20,60 @@ export interface NearContextType {
 }
 
 // Initializing contract
-export const initContract = async (): Promise<NearContextType> => {
+export const initContract = async (
+  isBackend = false,
+  childContractName?: string
+): Promise<NearContextType> => {
   const nearConfig = getConfig(process.env.NODE_ENV || 'testnet')
+  let near = null
+  let walletConnection = null
 
   // Initializing connection to the NEAR TestNet
-  const near = await nearAPI.connect({
-    ...nearConfig,
-    headers: {},
-    keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore(),
-  })
 
-  // Needed to access wallet
-  const walletConnection = await new nearAPI.WalletConnection(near, 'GLU3')
+  if (isBackend && childContractName) {
+    const secretKey = process.env.PRIVATE_KEY || ''
+    const keyPair = nearAPI.KeyPair.fromString(secretKey)
+    const signer = await nearAPI.InMemorySigner.fromKeyPair(
+      nearConfig.networkId,
+      process.env.CONTRACT_NAME || '',
+      keyPair
+    )
+
+    // Initializing connection to the NEAR TestNet
+    near = await nearAPI.connect({
+      ...nearConfig,
+      headers: {},
+      signer,
+    })
+  } else {
+    near = await nearAPI.connect({
+      ...nearConfig,
+      headers: {},
+      keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore(),
+    })
+
+    // Needed to access wallet
+    walletConnection = await new nearAPI.WalletConnection(near, 'GLU3')
+  }
 
   // Load in account data
   let currentUser
-  if (walletConnection.getAccountId()) {
+  if (walletConnection?.getAccountId()) {
     currentUser = {
-      accountId: walletConnection.getAccountId(),
-      balance: (await walletConnection.account().state()).amount,
-      isSignedIn: walletConnection.isSignedIn(),
+      accountId: walletConnection?.getAccountId(),
+      balance: (await walletConnection?.account().state()).amount,
+      isSignedIn: walletConnection?.isSignedIn(),
     }
   }
 
+  const account = walletConnection
+    ? walletConnection.account()
+    : await near.account(process.env.CONTRACT_NAME || '')
   // Initializing our contract APIs by contract name and configuration
   const contract = await new nearAPI.Contract(
-    walletConnection.account(),
-    nearConfig.contractName,
+    account,
+    //@ts-ignore
+    isBackend ? childContractName : nearConfig.contractName,
     {
       // View methods are read-only – they don't modify the state, but usually return some value
       viewMethods: ['getTokenStats'],
