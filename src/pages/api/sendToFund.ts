@@ -5,8 +5,8 @@ import { initContract } from 'src/near/initContract'
 const prisma = new PrismaClient()
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'POST') {
-    const { apiKey, amount, id } = req.body
+  if (req.method === 'GET') {
+    const { apiKey, amount, id } = req.query
     if (apiKey) {
       const response = await prisma.apiKeyTestnet.findUnique({
         where: {
@@ -18,6 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         process.env.CONTRACT_NAME
       }`
       const { contract } = await initContract(true, contractName)
+      // @ts-ignore
       await contract?.sendToFund({ amount, id })
       res.status(200).json({ message: 'Tokens sent to the temporary fund.' })
     }
