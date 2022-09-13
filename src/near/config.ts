@@ -1,5 +1,4 @@
-export const CONTRACT_NAME =
-  process.env.CONTRACT_NAME || 'dev-1663003785845-27921924996527'
+export const CONTRACT_NAME = process.env.CONTRACT_NAME || 'glu3.testnet'
 
 export enum NETWORK_TYPE {
   PRODUCTION = 'production',

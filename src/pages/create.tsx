@@ -36,17 +36,17 @@ const Create: React.FC = () => {
   const createToken = async () => {
     try {
       setIsLoading(true)
-    } catch (e) {
-      const data = (await localStorage.getItem('tokenData')) || ''
-      console.log({ data })
+      const data = localStorage.getItem('tokenData') || ''
       // Todo: call the api-key gen method
       await contract?.createToken(
         { ...JSON.parse(data) },
         '300000000000000',
         '0'
       )
-      await axios.post('api/apiKey', { wallet: currentUser?.accountId })
+      await axios.post('/api/apiKey', { wallet: currentUser?.accountId })
       await localStorage.setItem('isCreating', JSON.stringify(false))
+    } catch (e) {
+      console.error(e)
     } finally {
       setIsLoading(false)
       setHasSucceeded(true)
@@ -59,24 +59,15 @@ const Create: React.FC = () => {
     setIsCreating(JSON.parse(storedIsCreating))
   }, [])
 
-  // React.useEffect(() => {
-  //   axios.post('api/apiKey', { wallet: currentUser?.accountId })
-  // }, [])
-
   React.useEffect(() => {
     if (isCreating) {
       createToken()
     }
-  }, [isCreating])
+  }, [])
 
   const handleCreate = async () => {
     try {
       setIsLoading(true)
-      await contract?.deploy(
-        {},
-        '300000000000000',
-        utils.format.parseNearAmount('20')
-      )
       await localStorage.setItem('isCreating', JSON.stringify(true))
       await localStorage.setItem(
         'tokenData',
@@ -88,6 +79,11 @@ const Create: React.FC = () => {
           canBurn,
           canMint,
         })
+      )
+      await contract?.deploy(
+        {},
+        '300000000000000',
+        utils.format.parseNearAmount('20')
       )
     } catch (e) {
       console.error(e)
