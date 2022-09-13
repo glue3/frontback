@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  wallet    String @unique
+  apiKey    String @unique
+}
+
+model ApiKeyTestnet {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  wallet    String @unique
+  apiKey    String @unique
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  wallet        String @unique
+  transactionId String
+  amount        BigInt
+  network       Network
+}
+
+enum Network {
+  MAINNET
+  TESTNET
+}
