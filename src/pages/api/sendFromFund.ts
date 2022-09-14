@@ -6,6 +6,7 @@ import { initContract } from 'src/near/initContract'
 
 const prisma = new PrismaClient()
 
+// Allows users who have a wallet to claim tokens from funds
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const { amount, id, walletAddress, apiKey } = req.body

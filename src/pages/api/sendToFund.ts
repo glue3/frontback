@@ -4,6 +4,7 @@ import { initContract } from 'src/near/initContract'
 
 const prisma = new PrismaClient()
 
+// Allows tokens to be saved in temporary funds
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const { apiKey, amount, id } = req.query

@@ -95,20 +95,6 @@ const Distribute: React.FC = () => {
         >
           {apiKey ? (
             <>
-              {/*<Box*/}
-              {/*  margin="5px auto 0 auto"*/}
-              {/*  width="90%"*/}
-              {/*  flex*/}
-              {/*  direction="column"*/}
-              {/*  round="small"*/}
-              {/*  pad="0"*/}
-              {/*  background="background-back"*/}
-              {/*>*/}
-              {/*  <Select*/}
-              {/*    options={['Test Token - TST', 'Staging Token - STG']}*/}
-              {/*    placeholder="choose the token"*/}
-              {/*  />*/}
-              {/*</Box>*/}
               <TextInput
                 plain={true}
                 focusIndicator={false}

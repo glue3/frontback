@@ -196,18 +196,6 @@ const Create: React.FC = () => {
                 min={0}
                 onChange={(evt) => setTokenSupply(evt.target.value)}
               />
-              {/*<TextInput*/}
-              {/*  plain={true}*/}
-              {/*  focusIndicator={false}*/}
-              {/*  name="tokenDecimals"*/}
-              {/*  type="number"*/}
-              {/*  step="1"*/}
-              {/*  placeholder="18 (decimals)"*/}
-              {/*  size="large"*/}
-              {/*  textAlign="start"*/}
-              {/*  min={0}*/}
-              {/*  onChange={(evt) => setTokenDecimals(Number(evt.target.value))}*/}
-              {/*/>*/}
               <Box
                 direction="column"
                 justify="start"

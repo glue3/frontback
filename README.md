@@ -48,6 +48,7 @@ For the same in Webstorm follow these instructions:
 ## Factory Contract
 
 ```
+deploy()
 createToken(
     tokenName: string,
     symbol: string,
@@ -61,24 +62,19 @@ createToken(
 ## Child Contract
 
 ```
-burnToken(amount)
-mintToken(amount, toWallet? )
-sendToken(walletAddress, amount)
-sendToFund(id, amnt)
-sendFromFund(walletAddress, amount)
-changeOwner(address)
+ft_transfer(receiver_id, amount)
+sendToFund(id, amount)
+sendFromFund(id, amount, walletAddress)
 ```
 
-## Backend REST API (API KEY)
+## Backend REST API (to be used with generated API Key)
 
-- `POST /sendToFund` ( send tokens of a user without a wallet to the fund )
+- `GET /sendToFund?apiKey&amount&id` (send tokens of a user without a wallet to the temporary fund)
 
-- `POST /sendToken` (Description: send tokens directly  to a wallet address)
-
-- `POST /claim` (claim tokens from fund with an id and a wallet Address)
+- `POST /sendFromFund` (tokens that were stored on the temporary funds can be claimed via this API)
 
 
 ## WARNING!
 
 This project was coded in only 2 days for the Nearcon 2022 Hackathon. Therefore, it is just a proof of concept.
-The API routes are not secured whatsoever. So, please, don't use this code in production.
+The API routes are not secured whatsoever. Don't use this code in production!

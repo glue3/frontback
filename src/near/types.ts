@@ -37,11 +37,6 @@ export interface ContractType extends nearAPI.Contract {
     gas?: string,
     deposit?: string
   ) => void
-  storage_deposit: (
-    { account_id }: { account_id: string },
-    gas?: string,
-    deposit?: string
-  ) => void
   sendToFund: (
     { id, amount }: { id: string; amount: string },
     gas?: string,

@@ -4,6 +4,7 @@ import { generateApiKey } from 'generate-api-key'
 
 const prisma = new PrismaClient()
 
+// Todo: hash the API keys before storing into the database
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { body } = req
   if (req.method === 'GET') {
